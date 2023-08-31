@@ -14,7 +14,6 @@ const EyeIcon = ({ onClick }: any) => {
     )
 }
 
-
 const projectList = [
     {
         id: nanoid(),
@@ -89,23 +88,32 @@ const Home = () => {
         setParams({ ...params, [name]: value })
     }
 
+    let searchTimeout: any;
+
     const handleFilterClick = () => {
-        performSearch(searchKey); // Pass the current searchKey to performSearch
+        clearTimeout(searchTimeout);
+        searchTimeout = setTimeout(() => {
+            performSearch(searchKey);
+        }, 2000);
     };
 
     const performSearch = (key: string) => {
-        const filteredProjects = projectList.filter((project) => {
+        const filteredProjects = projects.filter((project) => {
             const projectInfo = project.name + project.description;
-
             return projectInfo.toLowerCase().includes(key.toLowerCase());
         });
 
         setProjects(filteredProjects);
     };
 
-    const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const handleSearchChange = (event: any) => {
         const newSearchKey = event.target.value;
         setSearchKey(newSearchKey);
+
+        clearTimeout(searchTimeout);
+        searchTimeout = setTimeout(() => {
+            performSearch(newSearchKey);
+        }, 2000);
     };
 
     const handleSubmit = () => {
